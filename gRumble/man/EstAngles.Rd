@@ -80,11 +80,11 @@ angles<-cbind(cumsum(filter(rnorm(length(depth),0,sd=0.001),filter=rep(1,15)/15,
               cumsum(filter(rnorm(length(depth),0,sd=0.001),filter=rep(1,15)/15, sides=2,circular=TRUE)),
               cumsum(filter(rnorm(length(depth),0,sd=0.001),filter=rep(1,15)/15, sides=2,circular=TRUE)))
 
-#rotating the acceleratoin data to simulate it in a stomach
-xyz<-RotData(angCorr = cbind(angles,1),xyz=xyz)
+#rotating the acceleration data to simulate it in a stomach
+xyz<-RotData(xyz = xyz, Xr = angles[,1],Yr = angles[,2],Zr = angles[,3])
 
 #estimating the angle of rotation
-est_ang <- EstAngles(dat=xyz,vv = vv,breaks=breaks[,c(2,3)],
+est_ang <- EstAngles(dat=xyz,vv = vv,breaks=breaks,
                      dat_Freq = 5, signal = c(.3,.7), wind = 6, Zby = pi/90,lim=c(-pi/4,pi/4))
 
 
