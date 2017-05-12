@@ -1,7 +1,10 @@
 Package: gRumble
 Title: Rotate Data
 Version: 0.0.0.9000
-Authors@R: c(person("Connor", "White", email = "cwhite@mbayaq.org", role = c("aut", "cre")),person("Jerry", "Moxely", email = "jmoxely@mbayaq.org", role = c("aut", "cre")),person("Salvador", "Jorgensen", email = "sjorgensen@mbayaq.org", role = c("aut", "cre")))
+Author: Connor White [aut,cre],
+  Jerry Moxely[aut],
+  Salvador Jorgensen[aut]
+Maintainer: Connor White <cwhite@mbayaq.org>
 Description: A package designed for handleing data from animal borne IMU data
     loggers. The package is mainly focused on correcting orientation of tags of
     unknown positions, such as data loggers that were fed to sharks or to tags that
@@ -10,5 +13,5 @@ Depends:
     R (>= 3.1.0)
 License: What license is it under?
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 RoxygenNote: 5.0.1
