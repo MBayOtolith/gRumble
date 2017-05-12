@@ -1,7 +1,4 @@
 
-####Functions for Rotation Matrixes
-#b and angles in Radians
-#Rotation matrix around x axis
 Xb<-function(b){
   mat.out<-rbind(c(1,0,0),
                  c(0,cos(b),sin(b)),
@@ -9,7 +6,7 @@ Xb<-function(b){
   return(mat.out)
 }
 
-#rotation martix around y axis
+
 Yb<-function(b){
   mat.out<-rbind(c(cos(b),0,sin(b)),
                  c(0,1,0),
@@ -17,7 +14,7 @@ Yb<-function(b){
   return(mat.out)
 }
 
-#rotation around Z axis
+
 Zb<-function(b){
   mat.out<-rbind(c(cos(b),sin(b),0),
                  c(-sin(b),cos(b),0),
@@ -36,14 +33,14 @@ ZXYb<-function(Xr,Yr,Zr){
   return(rotMat)
 }
 
-#rotate xyz by all three angles
+
 xyzTrans<-function(xyz,Xr=0,Yr=0,Zr=0){ 
   xyz<-xyz %*% XYZb(Xr,Yr,Zr)
   return(xyz)
 }
 
 
-##finding the angles to rotate x and y to horizontal
+
 XYrotAng<-function(xyz){
   if(nrow(xyz>1)){
     pos<-c(mean(xyz[,1],na.rm=TRUE),
@@ -61,7 +58,7 @@ XYrotAng<-function(xyz){
 
 
 
-#Finding the angles to rotate around the z axis to find the correct tail beat freq
+
 ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=c(-pi/2,pi/2),weighting=FALSE){ 
   if(any(is.na(xyz))){
     stop("NAs in data")
@@ -146,7 +143,7 @@ findBreaks<-function(VV = NULL,corrFreq= 30,minsize=NULL,lims=c(-.05,.05), dat_F
 
 
 
-#Calculate the angles at every time point determined by the breaks argument
+
 EstAngles<-function(dat,vv, breaks,dat_Freq = 5,signal = c(.3,.7),wind = 7,Zby = pi/180, lim=c(-pi/2,pi/2),weighting=FALSE){
   est_angles<-matrix(0,nrow=nrow(breaks),ncol=7)
   
@@ -191,7 +188,6 @@ EstAngles<-function(dat,vv, breaks,dat_Freq = 5,signal = c(.3,.7),wind = 7,Zby =
 
 
 
-###Interpolate between angles
 angleGapInterp<-function(dat,events){
   loc<-event(events)
   leng<-loc[,2] - loc[,1]+2
@@ -250,7 +246,7 @@ angInterp<-function(estAngles, data){
   return(cbind(Xr,Yr,Zr))
 }
 
-#PitchRollAngles
+
 pitchRoll<-function(xyz,degrees=FALSE){
   roll = atan(xyz[,2]/(xyz[,3]))
   pitch = atan((-xyz[,1])/((xyz[,2] * sin(roll)) + (xyz[,3]*cos(roll))))
@@ -263,7 +259,6 @@ pitchRoll<-function(xyz,degrees=FALSE){
 
 
 
-#PitchRollAngles using atan2
 pitchRoll2<-function(xyz,degrees=FALSE){
   roll = atan2(xyz[,2],(xyz[,3]))
   pitch = atan2((-xyz[,1]),((xyz[,2] * sin(roll)) + (xyz[,3]*cos(roll))))
@@ -276,7 +271,6 @@ pitchRoll2<-function(xyz,degrees=FALSE){
 
 
 
-#rotate data by an equal number of rotation angles
 RotData<-function(xyz,Xr,Yr,Zr){
   out<-apply(cbind(xyz,Xr,Yr,Zr),MARGIN=1,FUN = function(x){
     xyzTrans(xyz=c(x[1],x[2],x[3]),Xr=x[4],Yr=x[5],Zr=x[6])
@@ -285,13 +279,12 @@ RotData<-function(xyz,Xr,Yr,Zr){
 }
 
 
-#Function to calculate angle in radians.
 vectorAngle<-function(vec1,vec2){
   theta <- acos( sum(vec1*vec2) / (sqrt(sum(vec1 * vec1)) * sqrt(sum(vec2 * vec2)) ) )
   return(theta)
 }
 
-#DynamicStatic
+
 Gsep<-function(xyz,filt=rep(1,5*5)/(5*5)){
   X_Static<-filter(xyz[,1],filter = filt, sides = 2,circular = TRUE)
   Y_Static<-filter(xyz[,2],filter = filt, sides = 2,circular = TRUE)
@@ -308,7 +301,6 @@ Gsep<-function(xyz,filt=rep(1,5*5)/(5*5)){
 
 
 
-#Add a square that is a potential tag
 tag<-function(x, y ,ang=0,exp=1,col="orange"){
 
   xlocs<-c(-0.25,-.25,.25,.25)
@@ -319,7 +311,6 @@ tag<-function(x, y ,ang=0,exp=1,col="orange"){
 }
 
 
-#Add a polygon of a shark from an overhead perspective
 sharkback<-function(x, y, ang=0,exp=1,col="lightblue4"){
   
   ylocs<-c(1.002,  0.988,  0.920,  0.857,  0.752,  0.643,  0.594,  0.494,
@@ -349,7 +340,6 @@ sharkback<-function(x, y, ang=0,exp=1,col="lightblue4"){
 }
 
 
-#Add a polygon of a profile of a shark. To visualize pitch
 shark<-function(x, y, ang=0,exp=1,col="lightblue4"){  
   xlocs<-c(-0.540, -0.695, -0.705, -0.645, -0.750, -0.745, -0.535,
            -0.075, -0.105, -0.100, 0.075, 0.295, 0.470, 0.575,
@@ -362,7 +352,7 @@ shark<-function(x, y, ang=0,exp=1,col="lightblue4"){
   shapePlot(x=x, y=y, shapeX=xlocs, shapeY=ylocs, ang=ang, exp=exp, col=col)
 }
 
-#Add a polygon of a shark looking head on at it. To visualize roll
+
 sharkhead<-function(x,y,ang=0,exp=1,col="lightblue4"){
   ylocs<-c(-0.27705, -0.26344, -0.23170, -0.17276, -0.18636,
            -0.22263, -0.26344, -0.33, -0.23624, -0.16822,
@@ -387,7 +377,6 @@ sharkhead<-function(x,y,ang=0,exp=1,col="lightblue4"){
 }
 
 
-#General plot to add polygon shape onto plot and scale it
 shapePlot<-function(x, y, shapeX=NULL,shapeY=NULL,ang=0,exp=1,col="lightblue4"){
   op<-par()
   xdif<-op$usr[2]-par()$usr[1]
@@ -407,15 +396,8 @@ shapePlot<-function(x, y, shapeX=NULL,shapeY=NULL,ang=0,exp=1,col="lightblue4"){
 }
 
 
-###Function to downsample data, the more you want to downsample the worse this will perform,
-#but if you only want to downsample a bit then this should be faster than a for loop
 collapse<-function(dat,freq){
   d<-filter(dat,filter = rep(1,freq)/freq,sides=2,circular=TRUE)
   d<-d[seq(1,length(dat), by=freq)]
   return(d)
 }
-
-
-  
-  
-
