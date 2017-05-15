@@ -29,7 +29,7 @@ returns a vector of headings in reference to north in radians
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Connor F. White
 }
 \note{
 %%  ~~further notes~~
