@@ -18,6 +18,9 @@ pitch and roll in radians
   \item{magxyz}{
 magnetometer readings centered on zero
 }
+  \item{magOff}{
+vector of length three representing the hard iron offset
+}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
