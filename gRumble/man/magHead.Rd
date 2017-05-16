@@ -8,7 +8,7 @@ Heading from Magnetometer
 based on the animals pitch and roll the heading directed to north, Pi might needed to be added to the heading for the correct orientation, Might just be the hard iron offset though, blah
 }
 \usage{
-magHead(PR,magxyz)
+magHead(PR,magxyz,magoff)
 }
 
 \arguments{
