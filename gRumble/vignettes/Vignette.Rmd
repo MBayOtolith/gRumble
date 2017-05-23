@@ -1,23 +1,24 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
-date: "`r Sys.Date()`"
+title: "Introduction to gRumble"
+author: "Jerry Moxley"
+date: "May 2017"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Introduction to gRumble}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+The gRumble package contains functions for the post-processing of sensor data returned from motion detecting data loggers (a.k.a., inertial monitoring units or IMUs, for short) with shifting orientations during deployment.   
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+Accelerometry data from such data loggers are transforming quantitative understanding of animal behavior, but requires significant and careful handling to translate high-resolution data streams into interpretible behavior.  A primary task of post-processing this data is to calibrate the tag's orientation so that tri-axial measurements correspond with the body posture of the animal.  This is primarily accomplished by resolving static acceleration due to the force of gravity and re-orienting the data with coordinate transformations to minimize 
 
-## Vignette Info
+This package was designed for stomach-borne telemetry devices fed to sharks, but applies to other IMU uses that involve unknown orientations during the deployment.  
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## History of gRumble package
+
+Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015
 
 ## Styles
 
