@@ -18,7 +18,7 @@ This package was designed for stomach-borne telemetry devices fed to sharks, but
 
 ## History of gRumble package
 
-Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015
+Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015.  
 
 ## Styles
 
