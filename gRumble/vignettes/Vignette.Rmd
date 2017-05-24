@@ -1,6 +1,6 @@
 ---
 title: "Introduction to gRumble"
-author: "Jerry Moxley"
+author: "MBayOtolith <jmoxley@mbayaq.org>"
 date: "May 2017"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,12 +9,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The gRumble package contains functions for the post-processing of sensor data returned from motion detecting data loggers (a.k.a., inertial monitoring units or IMUs, for short) with shifting orientations during deployment.   
+The gRumble package contains functions for the post-processing of sensor data returned from animal-borne motion detecting data loggers (a.k.a., inertial monitoring units or IMUs, for short) with shifting orientations during deployment. 
 
-Accelerometry data from such data loggers are transforming quantitative understanding of animal behavior, but requires significant and careful handling to translate high-resolution data streams into interpretible behavior.  A primary task of post-processing this data is to calibrate the tag's orientation so that tri-axial measurements correspond with the body posture of the animal.  This is primarily accomplished by resolving static acceleration due to the force of gravity and re-orienting the data with coordinate transformations to minimize 
 
-This package was designed for stomach-borne telemetry devices fed to sharks, but applies to other IMU uses that involve unknown orientations during the deployment.  
+Inertial measurement data (e.g., accelerometry, magnetometry, etc.) from such data loggers are transforming quantitative understanding of animal behavior, but requires significant and careful handling to translate high-resolution data streams into interpretible behavior.  One primary post-processing task is repositioning the tri-axial sensor data so that measurements correspond to the body posture of the animal.  Aligningment of the data to the animal's frame of reference is accomplished by resolving the static acceleration signal of gravity and/or aligning dynamic acceleration signals to known (and ideally repetetive) behaviors.  
 
+
+Here we present a dynamic approach to transforming raw IMU data in order to align signals with the body axes of a tagged animal, in this case sharks carrying unfixed stomach-borne IMUs fed to them during research.  This approach builds on methods described in [Jorgensen et al. 2015] (https://animalbiotelemetry.biomedcentral.com/articles/10.1186/s40317-015-0071-6), but importantly uses a dyanmic moving window instead of a discrete window that allows for continuous correction and accounting for stomach movement.  
 
 ## History of gRumble package
 
