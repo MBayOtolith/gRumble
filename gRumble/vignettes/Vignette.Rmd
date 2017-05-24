@@ -21,13 +21,13 @@ Here we present a dynamic approach to transforming raw IMU data in order to alig
 
 Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015.  
 
-## Styles
+## Model overview
+4 steps
+1-calc breaks in VV
+2-estimate angles
+3-test for forward-facing/rear-facing orientation
+4-backfill angles to recover original data resolution
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
 
 ## Figures
 
