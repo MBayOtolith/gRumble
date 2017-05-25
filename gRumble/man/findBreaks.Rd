@@ -45,7 +45,8 @@ findBreaks returns a matrix with 4 columns.  Column 1 marks the midpoint of each
 %% ~put references to the literature/web site here ~
 }
 \author{
-Connor F. White
+Connor F. White (code, text)
+Jerry H. Moxley (text)
 }
 \note{
 %%  ~~further notes~~

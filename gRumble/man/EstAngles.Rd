@@ -17,7 +17,7 @@ EstAngles(dat, vv, breaks, dat_Freq = 5, signal = c(0.3, 0.7), wind = 7, Zby = p
 3-column matrix of tri-axial acceleration data (X/Y/Z axes) at length of raw data
 }
   \item{vv}{
-vector of Vertical Velocities (VV) at length of raw data
+vector of Vertical Velocities (VV) at length of raw XYZ data
 }
   \item{breaks}{
 2-column matrix of start/end indices of each window identified by findBreaks()
@@ -49,7 +49,8 @@ This function returns 6-column data frame that is the same length as the breaks 
 %% ~put references to the literature/web site here ~
 }
 \author{
-Connor F. White
+Connor F. White (code, text)
+Jerry H. Moxley (text)
 }
 \note{
 %%  ~~further notes~~

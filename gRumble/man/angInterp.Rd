@@ -2,7 +2,7 @@
 \alias{angInterp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Interpolate between angles in Radians using shoretest distance
+Interpolate between angles in Radians using shortest distance
 }
 \description{
 need to write
@@ -50,7 +50,7 @@ angInterp(estAngles, data)
 ##--	or do  help(data=index)  for the standard data sets.
 
 ## The function is currently defined as
-function (estAngles, data) 
+function (estAngles, data)
 {
     rotX <- rep(NA, nrow(data))
     rotX[1] <- estAngles[1, 4]
