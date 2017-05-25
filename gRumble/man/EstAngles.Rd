@@ -2,7 +2,7 @@
 \alias{EstAngles}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-generate angles to correct tag orientation
+Generate angles to correct tag orientation
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -13,35 +13,36 @@ EstAngles(dat, vv, breaks, dat_Freq = 5, signal = c(0.3, 0.7), wind = 7, Zby = p
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dat}{
-3 column xyz acceleration data
+3-column matrix of tri-axial acceleration data (X/Y/Z axes) at length of raw data
 }
   \item{vv}{
-vertical velocity the same length as dat
+vector of Vertical Velocities (VV) at length of raw data
 }
   \item{breaks}{
-2 column matrix representing the start and end of each window
+2-column matrix of start/end indices of each window identified by findBreaks()
 }
   \item{dat_Freq}{
-the frequency the data is collected at in Hz
+the frequency (Hz) of raw data at time of collection
 }
   \item{signal}{
-Frequency range of the locomotion signal for the correction around Z
+range of frequencies (Hz??) for identifying locomotion signals in corrections around Z-axis
 }
   \item{wind}{
 window size to smooth the data by to isolate the dynamic acceleration from locomation (in seconds)
 }
   \item{Zby}{
-resolution of corrections around the z axis in radians
+resolution of corrections around Z-axis (radians)
 }
   \item{lim}{
-between subsequent windows what are the limits the tag can shift by
+max and min values setting limits of relative angular change between subsequent windows (radians)
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-The function returns a data frame that is 6 columns wide and the same number of rows as the breaks argument. The columns 1 and 2 are teh start and end of the windows. column 3 is the rotation the Y axis, column 4 is the rotation around the x axis, and column 5 is the rotation around the Z axis. Column 6 is the coefficient of the regression between VV and body pitch, to indicate if teh tag was corrected in the wrong direction along the anterior posterior axis.
+This function returns 6-column data frame that is the same length as the breaks arguement.  Columns 1 and 2 are the start/end indices of each window indentified in the breaks arguement.  Columns 3, 4, and 5 are the rotations around the X ("pitch"), Y ("yaw"), and Z ("roll") axes respectively.  Column 6 is the coefficient of regression between VV and body pitch that indicates alignment or malalignment of the tag with the animal's anterior/posterior axis.
+
 }
 \references{
 %% ~put references to the literature/web site here ~
