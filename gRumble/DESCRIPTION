@@ -5,13 +5,16 @@ Author: Connor White [aut,cre],
   Jerry Moxely[aut],
   Salvador Jorgensen[aut]
 Maintainer: Connor White <cwhite@mbayaq.org>
-Description: A package designed for handleing data from animal borne IMU data
-    loggers. The package is mainly focused on correcting orientation of tags of
-    unknown positions, such as data loggers that were fed to sharks or to tags that
-    have shifted orientation once they were placed on animals.
+Description: A package designed for handling data from animal borne IMU data
+    loggers. The package is mainly focused on correcting orientation for tags
+    without a fixed position, such as data loggers that were fed to sharks, or 
+    to tags that shift orientation once they were placed on animals.
 Depends:
     R (>= 3.1.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
