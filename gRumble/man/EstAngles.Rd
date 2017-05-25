@@ -6,6 +6,7 @@ Generate angles to correct tag orientation
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Estimation function to calculate the X/Y/Z angles within each window of horizontal/prone behavior that can correct data to the animal's frame of reference;
 }
 \usage{
 EstAngles(dat, vv, breaks, dat_Freq = 5, signal = c(0.3, 0.7), wind = 7, Zby = pi/180, lim = c(-pi/2, pi/2))
