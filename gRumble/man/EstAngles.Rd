@@ -41,7 +41,7 @@ max and min values setting limits of relative angular change between subsequent 
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-This function returns 6-column data frame that is the same length as the breaks arguement.  Columns 1 and 2 are the start/end indices of each window indentified in the breaks arguement.  Columns 3, 4, and 5 are the rotations around the X ("pitch"), Y ("yaw"), and Z ("roll") axes respectively.  Column 6 is the coefficient of regression between VV and body pitch that indicates alignment or malalignment of the tag with the animal's anterior/posterior axis.
+This function returns 6-column data frame that is the same length as the breaks arguement.  Columns 1 and 2 are the start/end indices of each window indentified in the breaks arguement.  Columns 3, 4, and 5 are the rotations around the X ("roll"), Y ("pitch"), and Z ("yaw") axes respectively.  Column 6 is the coefficient of regression between VV and body pitch that indicates alignment or malalignment of the tag with the animal's anterior/posterior axis.
 
 }
 \references{
