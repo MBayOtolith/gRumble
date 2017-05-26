@@ -22,36 +22,55 @@ Here we present a dynamic approach to transforming raw IMU data in order to alig
 Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015.  
 
 ## Model overview
-The correction procedure follows four primary steps, three of are enacted via custom functions: 
+The correction procedure follows four primary steps, three of which are accomplished by custom functions: 
 
-1. find
+1.  findBreaks() - indexing function to identifying qualifying periods of horizontal/prone behavior where the static acceleration of gravity can be isolated;
+2.  EstAngles() - estimation function to calculate the X/Y/Z angles within each window of horizontal/prone behavior that can correct data to the animal's frame of reference;  
+3.  Matching of the anterior/posterior axes - ensuring alignment of the anterior/posterior axes of the animal and the IMU;
+4.  angInterp() - interpolation function to backfill estimated corrections calculated at each window's midpoint to the entire data range stream.  
 
 Notes about data preparation and smoothing pre-processing are discussed in a separate section below.  In our example, the procedure relies on assumptions that the shark's body posture is horizontal or prone during periods when the vertical velocity (or depth rate) is near zero.  When adapting to other species, care should be taken in tailoring this assumption to appropriate behaviors for that animal.  
 
-identify the appropriate behavior for defining events when the tag's position is assumed to be known and level. 
+```{r, echo = F, message = F}
+#load necessary resources
+library(devtools)
 
+#pull down latest version & load
+install_github("MBayOtolith/gRumble/gRumble"); library(gRumble);
 
-have their own custom function designed for the specific procedure.   
+#adjust working dir
+wd <- "/Users/jhmoxley/Documents/Biologia & Animales/[[SharkTank]]/GitTank/gRumble"
+setwd(wd)
 
-4 steps
-1-calc breaks in VV
-2-estimate angles
-3-test for forward-facing/rear-facing orientation
-4-backfill angles to recover original data resolution
+#load data
+dat <- read.csv("6_Pepe_20101105_clipped.csv", header = T)
+head(dat); str(dat)
+datFreq <- 5;    #sampling frequency of data
 
-notes on data pre-processing.. smoothing, etc. 
-where to put figures?
+####DATA PROCESSING
+dat <- dat[1:(4*3600*datFreq),]    #working data, subset for first 4 hrs
+
+#smooth depth (in this case over 5s)
+dat$Depth <- filter(dat$Depth, filter = rep(1,5*datFreq)/(5*datFreq), sides = 2, circular = T)
+
+#calc vertical velocity
+dat$VV <- c(0, diff(dat$Depth, 1))
+dat$VV <- filter(dat$VV, filter=rep(1,datFreq), sides=2, circular=TRUE)  #converts/smooths to m/s from m/.2s
+
+```
 
 ## findBreaks()
-This method depends on the ability to identify moments of prone/horizontal posture when a properly-oriented tag will record static acceleration along a single axis.  For a swimming animal like a shark, this is determined by the animal's vertical velocity or depth rate as it is recorded by the depth sensor.  
+The gRumble method depends on the ability to identify moments of prone/horizontal posture when a properly-oriented tag will record static acceleration along a single axis.  For a swimming animal like a shark, this is determined by the animal's vertical velocity or depth rate as it is recorded by the depth sensor.  Applications to other species can define similar behaviors of known body posture from appropriate sensors to accomplish similar corrections.  
 
-  For a swimming animal like a shark, this is  
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r, echo = T}
+#finds windows in VV-vector over which animal has "horizontal/prone" posture
+brks <- findBreaks(VV = dat$VV, corrFreq = 30, minsize = 10, lims = c(-0.5, 0.5), dat_Freq = 5)
 ```
+
+This function call inputs the vector of vertical velocities from the IMU depth/pressure sensor and a range of arguements that structure the correction/estimation procedure.  The arguement *corrFreq* how often (in seconds) to estimate a correction, while *minsize* sets the lower limit for an adequate window to average VV across and test if the mean lies within the thresholds set by *lims*.  The arguement *dat_Freq* is set by the temporal resolution of the input data, and works with *corrFreq* to structure how the windows expand to find periods when VV averages towards 0.  
+
+**FIGURE ON WINDOW DEFINITION IN A DATA STREAM**
+**see figure on proper smoothing window?? **
 
 You can enable figure captions by `fig_caption: yes` in YAML:
 
@@ -63,6 +82,8 @@ Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr*
 
 ## Angle calculation
 Description of EstAngs()
+2 steps.. matching methods for estimating X/Y; 
+mismathcing method for finding Z (requires understanding of signal param)
 
 ##Correction for anterior/posterior 
 
