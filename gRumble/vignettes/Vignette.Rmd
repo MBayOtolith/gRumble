@@ -14,6 +14,8 @@ The gRumble package contains functions for the post-processing of sensor data re
 
 Inertial measurement data (e.g., accelerometry, magnetometry, etc.) from such data loggers are transforming quantitative understanding of animal behavior, but requires significant and careful handling to translate high-resolution data streams into interpretible behavior.  One primary post-processing task is repositioning the tri-axial sensor data so that measurements correspond to the body posture of the animal.  Aligningment of the data to the animal's frame of reference is accomplished by resolving the static acceleration signal of gravity and/or aligning dynamic acceleration signals to known (and ideally repetetive) behaviors.  
 
+![This figure depicts the differences in data when using an unfixed sensor ("stomach") and a fixed sensor ("fin mount")](paste(getwd(), "scratch/stomch_vs_fin.png", sep = "/"))
+
 
 Here we present a dynamic approach to transforming raw IMU data in order to align signals with the body axes of a tagged animal, in this case sharks carrying unfixed stomach-borne IMUs fed to them during research.  This approach builds on methods described in [Jorgensen et al. 2015] (https://animalbiotelemetry.biomedcentral.com/articles/10.1186/s40317-015-0071-6), but importantly uses a dyanmic moving window instead of a discrete window that allows for continuous correction and accounting for stomach movement.  
 
@@ -56,7 +58,6 @@ dat$Depth <- filter(dat$Depth, filter = rep(1,5*datFreq)/(5*datFreq), sides = 2,
 #calc vertical velocity
 dat$VV <- c(0, diff(dat$Depth, 1))
 dat$VV <- filter(dat$VV, filter=rep(1,datFreq), sides=2, circular=TRUE)  #converts/smooths to m/s from m/.2s
-
 ```
 
 ## findBreaks()
