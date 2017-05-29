@@ -31,7 +31,7 @@ temporal resolution (in seconds) of raw data for converting from seconds to data
 \details{
 This function indexes a series of behavioral windows over which average VV is near zero, the animal is in a relatively horizontal/prone posture, and the sensor data can be re-oriented.  The animal's posture is estimated by calculating the mean VV within windows of increasing size, until mean VV falls within the threshold limits set by the lims arguement.
 
-The temporal resolution of this angle estimation & re-orientation procedure is controlled by the arguement, corrFreq, which determines how often (in seconds) to calculate correction angles.  While windows that are calculated more frequently can be more accurate, this however can also  increase introduced processing error.
+The temporal resolution of this angle estimation & re-orientation procedure is controlled by the argument, corrFreq, which determines how often (in seconds) to calculate correction angles.  While windows that are calculated more frequently can be more accurate, this however can also increase introduced processing error.
 
 The minimal possible size of a window, in seconds, is set by the minsize argument and should be set with significant consideration.  Smaller window sizes are desirable because they can respond more rapidly to changes in tag orientation.  However, overly small windows can lead to overcorrection if stomach movements are attributed to posture/positional changes and are additionally problematic for resolving orientation around the Z-axis.  Z-axis corrections are derived from an FFT which relies on signal strengths.  On the other hand, windows that are too large are problematic by introducing error from stomach movements that occur within a window.
 
@@ -39,7 +39,7 @@ The lims arguement defines the acceptable thresholds of assuming the animal's po
 
 }
 \value{
-findBreaks returns a matrix with 4 columns.  Column 1 marks the midpoint of each window, where corrections are to be applied in an equally-spaced manner set by the corrFreq arguement.  Columns 2 and 3 mark the start/end indices of each window, respectively, but have variable spacing in order to ensure a mean VV over the window's duration within the specified VV threshold limits.  Column 4 is the average VV within this window.
+findBreaks returns a matrix with 4 columns.  Column 1 marks the midpoint of each window, where corrections are to be applied in an equally-spaced manner set by the corrFreq arguement.  Columns 2 and 3 mark the start/end indices of each window, respectively, but have variable spacing in order to ensure a mean VV over the window's duration within the specified VV threshold limits.  Column 4 is the average VV within each window.
 }
 \references{
 %% ~put references to the literature/web site here ~
