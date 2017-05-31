@@ -5,6 +5,7 @@ Generate break points for orientation corrections
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+An indexing function to identifying qualifying periods ("windows") of horizontal/prone behavior where the static acceleration of gravity can be isolated
 }
 \usage{
 findBreaks(VV = NULL, corrFreq = 30, minsize = NULL, lims = c(-0.05, 0.05), dat_Freq = 5)
@@ -12,35 +13,40 @@ findBreaks(VV = NULL, corrFreq = 30, minsize = NULL, lims = c(-0.05, 0.05), dat_
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{VV}{
-vector of vertical velocities at same frequency as the XYZ data
+vector of Vertical Velocities (VV) at same length as raw XYZ data
 }
   \item{corrFreq}{
-frequency in seconds of how often to calulate break points and limits
+resolution in seconds of how often to calulate break points and limits
 }
   \item{minsize}{
-minimum size of each window
+minimum size of each window for identifying horizontal/prone behavior
 }
   \item{lims}{
-minimum and mazimum vertical velocities with in each window
+minimum and maximum thresholds of VV limits for definining assumptions about presence of horizontal/prone posture within the window
 }
   \item{dat_Freq}{
-frequency that the data is collected at so convert from seconds to data points
+temporal resolution (in seconds) of raw data for converting from seconds to data points
 }
 }
 \details{
-This function is designed to make a series of windows over which to orient tags of unknown positions. The frequency of which to make windows and thus subsequency calculate orientation angles is the corrFreq argument. Windows that are calculated more frequently can be more accurate, however, this increases your introduced processing error. The minimal size of each window is set by the minsize argument. Smaller sizes can more rapidly respond to changes in the tag orientation, however, small window sizes can also attribute animal positional changes to stomach movement and the data is overcorrected, and animal positional information is lost. Small windows can be especially problematic for resolving orientation around the Z axis, which is derived from an FFT and relies on looking at signal strength. Windows that are too large are also problematic as stomach movents occur within a window and increase error.
+This function indexes a series of behavioral windows over which average VV is near zero, the animal is in a relatively horizontal/prone posture, and the sensor data can be re-oriented.  The animal's posture is estimated by calculating the mean VV within windows of increasing size, until mean VV falls within the threshold limits set by the lims arguement.
 
-However, by ensuring that the mean virtical velocity of each window is within the limits provided by the lims argument the animal should largely be prone. If the windows mean VV is outside the values provided by lims, the window size will increase until the vertical velocity is within the limits. This limits the possibility that while an animal is ascending it will correct its body pitch to horizontal. 
+The temporal resolution of this angle estimation & re-orientation procedure is controlled by the argument, corrFreq, which determines how often (in seconds) to calculate correction angles.  While windows that are calculated more frequently can be more accurate, this however can also increase introduced processing error.
+
+The minimal possible size of a window, in seconds, is set by the minsize argument and should be set with significant consideration.  Smaller window sizes are desirable because they can respond more rapidly to changes in tag orientation.  However, overly small windows can lead to overcorrection if stomach movements are attributed to posture/positional changes and are additionally problematic for resolving orientation around the Z-axis.  Z-axis corrections are derived from an FFT which relies on signal strengths.  On the other hand, windows that are too large are problematic by introducing error from stomach movements that occur within a window.
+
+The lims arguement defines the acceptable thresholds of assuming the animal's posture is prone or horizontal.  Window size is increased until the associated mean VV falls within these thresholds, thus limiting the possibility of mis-positioning a solely ascending or descedning animal to horizontal.
 
 }
 \value{
-findBreaks returns a 4 column matrix.  The first column it the mid point of the window and where the correction will be applied, these are equally spaced, by the corrFreq argument. The second column will be the start of the window and the 3rd column will be the end of the window. These points are not eually spaced but represent a start and a end point that provide the midpoint with an VV within the limits. The 4th column is the average vertical velocity within the window.
+findBreaks returns a matrix with 4 columns.  Column 1 marks the midpoint of each window, where corrections are to be applied in an equally-spaced manner set by the corrFreq arguement.  Columns 2 and 3 mark the start/end indices of each window, respectively, but have variable spacing in order to ensure a mean VV over the window's duration within the specified VV threshold limits.  Column 4 is the average VV within each window.
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-Connor F. White
+Connor F. White (code, text)
+Jerry H. Moxley (text)
 }
 \note{
 %%  ~~further notes~~
