@@ -14,22 +14,32 @@ The gRumble package contains functions for the post-processing of sensor data re
 
 Inertial measurement data (e.g., accelerometry, magnetometry, etc.) from such data loggers are transforming quantitative understanding of animal behavior, but requires significant and careful handling to translate high-resolution data streams into interpretible behavior.  One primary post-processing task is repositioning the tri-axial sensor data so that measurements correspond to the body posture of the animal.  Aligningment of the data to the animal's frame of reference is accomplished by resolving the static acceleration signal of gravity and/or aligning dynamic acceleration signals to known (and ideally repetetive) behaviors.  
 
-![This figure depicts the differences in data when using an unfixed sensor ("stomach") and a fixed sensor ("fin mount")](paste(getwd(), "scratch/stomch_vs_fin.png", sep = "/"))
-
 
 Here we present a dynamic approach to transforming raw IMU data in order to align signals with the body axes of a tagged animal, in this case sharks carrying unfixed stomach-borne IMUs fed to them during research.  This approach builds on methods described in [Jorgensen et al. 2015] (https://animalbiotelemetry.biomedcentral.com/articles/10.1186/s40317-015-0071-6), but importantly uses a dyanmic moving window instead of a discrete window that allows for continuous correction and accounting for stomach movement.  
+
+
+
+![**Fig. 1:** *Acceleration traces from unfixed mounts (e.g., a stomach logger; left hand panel) differ visibly from more-invasive fixed mount systems (e.g., fin-mounted, right hand panel). A primary post-processing challenge is to develop a continuous and dynamic correction method that accounts for tag repositionings during deployment and allows for more interpretable data signals that waver around a central moment (e.g., see right hand panel).*](stomach_vs_fin.png)
+
 
 ## History of gRumble package
 
 Connor is a badass, and just straight coded up this fine piece of programming in 2017.  But it builds off the slick methods outlined in Jorgensen et al. 2015.  
 
 ## Model overview
+The gRumble method requires defining known moments when the animal's posture is oriented so that static acceleration due to gravity is contained within a single axis, such as a swimming shark with horizontal/prone posture.  In periods without qualifying horizontal/prone posture (e.g., ascending or descending behavior), gRumble dynamically expands the smoothing window to find a larger period when behavior averages to horizontal/prone posture.  Anchoring the correction to this window averaging towards horizontal/prone posture, the tag's orientation can be determined and ultimately transformed to align static acceleration in the tag along the relevant axes.  
+
+![**Fig. 2:** *The aim is to define method that repositions an unfixed IMU data logger so that it measures accelerations along the 3 primary axes of a shark's body.  With a color scheme consistent throughout this vignette, black is the X axis, red is Y, and blue is Z *](shark_triaxial.png)
+
+
+###Model Functions
+
 The correction procedure follows four primary steps, three of which are accomplished by custom functions: 
 
-1.  findBreaks() - indexing function to identifying qualifying periods of horizontal/prone behavior where the static acceleration of gravity can be isolated;
-2.  EstAngles() - estimation function to calculate the X/Y/Z angles within each window of horizontal/prone behavior that can correct data to the animal's frame of reference;  
-3.  Matching of the anterior/posterior axes - ensuring alignment of the anterior/posterior axes of the animal and the IMU;
-4.  angInterp() - interpolation function to backfill estimated corrections calculated at each window's midpoint to the entire data range stream.  
+1.  **findBreaks()** - indexing function to identifying qualifying periods of horizontal/prone behavior where the static acceleration of gravity can be isolated;
+2.  **EstAngles()** - estimation function to calculate the X/Y/Z angles within each window of horizontal/prone behavior that can correct data to the animal's frame of reference;  
+3.  **Matching of the anterior/posterior axes** - ensuring alignment of the anterior/posterior axes of the animal and the IMU;
+4.  **angInterp()** - interpolation function to backfill estimated corrections calculated at each window's midpoint to the entire data range stream.  
 
 Notes about data preparation and smoothing pre-processing are discussed in a separate section below.  In our example, the procedure relies on assumptions that the shark's body posture is horizontal or prone during periods when the vertical velocity (or depth rate) is near zero.  When adapting to other species, care should be taken in tailoring this assumption to appropriate behaviors for that animal.  
 
@@ -46,7 +56,7 @@ setwd(wd)
 
 #load data
 dat <- read.csv("6_Pepe_20101105_clipped.csv", header = T)
-head(dat); str(dat)
+#head(dat); str(dat)
 datFreq <- 5;    #sampling frequency of data
 
 ####DATA PROCESSING
@@ -60,8 +70,8 @@ dat$VV <- c(0, diff(dat$Depth, 1))
 dat$VV <- filter(dat$VV, filter=rep(1,datFreq), sides=2, circular=TRUE)  #converts/smooths to m/s from m/.2s
 ```
 
-## findBreaks()
-The gRumble method depends on the ability to identify moments of prone/horizontal posture when a properly-oriented tag will record static acceleration along a single axis.  For a swimming animal like a shark, this is determined by the animal's vertical velocity or depth rate as it is recorded by the depth sensor.  Applications to other species can define similar behaviors of known body posture from appropriate sensors to accomplish similar corrections.  
+## findBreaks - identifying known postures
+The gRumble method requires defining windows when the tag's orientation can be determined through assumptions about effects of static acceleration due to gravity on an animal in a known posture (or assumed to be known on average). For a swimming animal like a shark, horizontal or prone behavior matches this condition since acceleration due to gravity will mostly be contained within an individual axis.  Using ancilliary depth sensors on the IMU, we define horiztonal/prone posture as vertical velocities or depth rates near zero.  Applications for other species can define similar behaviors of known body posture from appropriate sensors to accomplish similar corrections.  
 
 ```{r, echo = T}
 #finds windows in VV-vector over which animal has "horizontal/prone" posture
@@ -70,8 +80,9 @@ brks <- findBreaks(VV = dat$VV, corrFreq = 30, minsize = 10, lims = c(-0.5, 0.5)
 
 This function call inputs the vector of vertical velocities from the IMU depth/pressure sensor and a range of arguements that structure the correction/estimation procedure.  The arguement *corrFreq* how often (in seconds) to estimate a correction, while *minsize* sets the lower limit for an adequate window to average VV across and test if the mean lies within the thresholds set by *lims*.  The arguement *dat_Freq* is set by the temporal resolution of the input data, and works with *corrFreq* to structure how the windows expand to find periods when VV averages towards 0.  
 
-**FIGURE ON WINDOW DEFINITION IN A DATA STREAM**
-**see figure on proper smoothing window?? **
+
+![**Fig. 3:** *The window size (in minutes) required to average the animal's posture to horizontal/prone behavior is shown in color over the animal's depth trace.  As visible here, gRumble dynamically enlargens the smoothing window to account for periods of ascending/descending behavior while minimizing it at other times to reduce risk of error introduction.*](windows_depthtrace.png)
+
 
 You can enable figure captions by `fig_caption: yes` in YAML:
 
@@ -81,8 +92,10 @@ You can enable figure captions by `fig_caption: yes` in YAML:
 
 Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
-## Angle calculation
-Description of EstAngs()
+## EstAngs - calculating correction angles
+
+
+
 2 steps.. matching methods for estimating X/Y; 
 mismathcing method for finding Z (requires understanding of signal param)
 
@@ -97,6 +110,9 @@ mismathcing method for finding Z (requires understanding of signal param)
 -test data is XX hours from a research shark
 -dependencies
 -smoothing & filtering, and defining the depth rate
+
+
+smoothing snotes: any movement shorter than 5s is animal-driven; longer than 5s is static.  e.g., comparison of using a blacktip (1s) vs whale sharks using longer duration TBF
 
 ##tidbits about code
 You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
