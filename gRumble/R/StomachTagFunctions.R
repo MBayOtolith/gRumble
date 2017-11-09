@@ -42,7 +42,7 @@ xyzTrans<-function(xyz,Xr=0,Yr=0,Zr=0){
 
 
 XYrotAng<-function(xyz){
-  if(length(xyz)>1){
+  if(length(xyz)>3){
     pos<-c(mean(xyz[,1],na.rm=TRUE),
          mean(xyz[,2],na.rm=TRUE),
          mean(xyz[,3],na.rm=TRUE))
