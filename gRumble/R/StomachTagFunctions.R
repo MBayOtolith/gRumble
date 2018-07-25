@@ -39,10 +39,16 @@ xyzTrans<-function(xyz,Xr=0,Yr=0,Zr=0){
   return(xyz)
 }
 
-
+#rotate so that x and y are perpendicular to gravity
+XYTrans<-function(xyz,Yr,Xr){  
+  xyz<-Yb(Yr) %*% t(xyz)
+  xyz<-Xb(Xr) %*% xyz
+  xyz<-t(xyz)
+  return(xyz)
+}
 
 XYrotAng<-function(xyz){
-  if(nrow(xyz>1)){
+  if(length(xyz)>3){
     pos<-c(mean(xyz[,1],na.rm=TRUE),
          mean(xyz[,2],na.rm=TRUE),
          mean(xyz[,3],na.rm=TRUE))
@@ -395,7 +401,7 @@ shapePlot<-function(x, y, shapeX=NULL,shapeY=NULL,ang=0,exp=1,col="lightblue4"){
 
 
 collapse<-function(dat,freq){
-  d<-filter(dat,filter = rep(1,freq)/freq,sides=2,circular=TRUE)
+  d<-stats::filter(dat,filter = rep(1,freq)/freq,sides=2,circular=TRUE)
   d<-d[seq(1,length(dat), by=freq)]
   return(d)
 }
