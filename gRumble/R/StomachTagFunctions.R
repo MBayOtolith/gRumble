@@ -57,8 +57,6 @@ XYrotAng<-function(xyz){
 }
 
 
-
-
 ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=c(-pi/2,pi/2),weighting=FALSE){
   if(any(is.na(xyz))){
     stop("NAs in data")
