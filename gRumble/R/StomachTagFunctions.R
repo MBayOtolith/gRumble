@@ -82,7 +82,7 @@ ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=
     xyz_cor<-Zb(zrot[x])%*%t(xyz)
     xyz_cor<-t(xyz_cor)
 
-    filt<-filter(xyz_cor[,2],filter=rep(1,dat_Freq*wind)/(dat_Freq*wind), sides = 2,circular = TRUE)
+    filt<-stats::filter(xyz_cor[,2],filter=rep(1,dat_Freq*wind)/(dat_Freq*wind), sides = 2,circular = TRUE)
     dyn<-xyz_cor[,2]-filt
     y.fft<-Mod(fft(dyn))
     mags<-cbind(mags,y.fft[locs])
@@ -174,7 +174,7 @@ EstAngles<-function(dat,vv, breaks,dat_Freq = 5,signal = c(.3,.7),wind = 7,Zby =
 
     xyz<-xyzTrans(as.matrix(dtemp[,1:3]),Xr=XYr[1],Yr=XYr[2], Zr=Zr)
 
-    p<-filter(xyz[,1],filter = rep(1,50)/(50), sides = 2,circular = TRUE)
+    p<-stats::filter(xyz[,1],filter = rep(1,50)/(50), sides = 2,circular = TRUE)
     m<-lm(p ~ vv1)
 
     est_angles[i,1]<-breaks[i,1]
