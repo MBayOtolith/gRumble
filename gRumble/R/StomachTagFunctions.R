@@ -292,9 +292,9 @@ vectorAngle<-function(vec1,vec2){
 
 
 Gsep<-function(xyz,filt=rep(1,5*5)/(5*5)){
-  X_Static<-filter(xyz[,1],filter = filt, sides = 2,circular = TRUE)
-  Y_Static<-filter(xyz[,2],filter = filt, sides = 2,circular = TRUE)
-  Z_Static<-filter(xyz[,3],filter = filt, sides = 2,circular = TRUE)
+  X_Static<-stats::filter(xyz[,1],filter = filt, sides = 2,circular = TRUE)
+  Y_Static<-stats::filter(xyz[,2],filter = filt, sides = 2,circular = TRUE)
+  Z_Static<-stats::filter(xyz[,3],filter = filt, sides = 2,circular = TRUE)
 
   X_Dynamic<-xyz[,1] - X_Static
   Y_Dynamic<-xyz[,2] - Y_Static
