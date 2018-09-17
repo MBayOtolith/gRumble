@@ -48,7 +48,7 @@ XYTrans<-function(xyz,Yr,Xr){
 }
 
 XYrotAng<-function(xyz){
-  if(length(xyz)>3){
+  if(nrow(xyz)>1){
     pos<-c(mean(xyz[,1],na.rm=TRUE),
          mean(xyz[,2],na.rm=TRUE),
          mean(xyz[,3],na.rm=TRUE))
@@ -61,8 +61,6 @@ XYrotAng<-function(xyz){
 
   return(c(Xr,Yr))
 }
-
-
 
 
 ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=c(-pi/2,pi/2),weighting=FALSE){
