@@ -91,12 +91,10 @@ ZrotAng_PDBA<-function(xyz,dat_Freq=25, wind=3, by=pi/360, head=0,lim=c(-pi/2,pi
 
   mags<-NULL
   for(x in 1:length(zrot)){
-    xyz_cor<-Zb(zrot[x])%*%t(xyz)
-    xyz_cor<-t(xyz_cor)
+    xyz_cor<-xyz %*% Zb(zrot[x])
     
     filt<-stats::filter(xyz_cor[,2],filter=rep(1,dat_Freq*wind)/(dat_Freq*wind), sides = 2,circular = TRUE)
     dyn<-xyz_cor[,2]-filt
-    
     
     mags<-cbind(mags,sum(abs(dyn)))
   }
