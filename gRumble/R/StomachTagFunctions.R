@@ -47,6 +47,8 @@ XYTrans<-function(xyz,Yr,Xr){
   return(xyz)
 }
 
+
+#Updated in stepwise fasion
 XYrotAng<-function(xyz){
   if(nrow(xyz)>1){
     pos<-c(mean(xyz[,1],na.rm=TRUE),
@@ -55,14 +57,57 @@ XYrotAng<-function(xyz){
   } else{pos=xyz}
 
   roll = atan2(pos[2],(pos[3]))
-  pitch = atan2((-pos[1]),((pos[2] * sin(roll)) + (pos[3]*cos(roll))))
+  pos<-pos %*% Xb(roll)
+  
+  pitch = atan(pos[1],pos[3])
   Xr=roll
-  Yr=pi-pitch
+  Yr=pitch
 
   return(c(Xr,Yr))
 }
 
+#Depreciated
+#XYrotAng<-function(xyz){
+#  if(nrow(xyz)>1){
+#    pos<-c(mean(xyz[,1],na.rm=TRUE),
+#           mean(xyz[,2],na.rm=TRUE),
+#           mean(xyz[,3],na.rm=TRUE))
+#  } else{pos=xyz}
+#  
+#  roll = atan2(pos[2],(pos[3]))
+#  pitch = atan2((-pos[1]),((pos[2] * sin(roll)) + (pos[3]*cos(roll))))
+#  Xr=roll
+#  Yr=pi-pitch
+#  return(c(Xr,Yr))
+#}
 
+
+ZrotAng_PDBA<-function(xyz,dat_Freq=25, wind=3, by=pi/360, head=0,lim=c(-pi/2,pi/2)){
+  if(any(is.na(xyz))){
+    stop("NAs in data")
+  }
+
+  zrot<-head + seq(lim[1],lim[2],by=by)
+
+  mags<-NULL
+  for(x in 1:length(zrot)){
+    xyz_cor<-Zb(zrot[x])%*%t(xyz)
+    xyz_cor<-t(xyz_cor)
+    
+    filt<-stats::filter(xyz_cor[,2],filter=rep(1,dat_Freq*wind)/(dat_Freq*wind), sides = 2,circular = TRUE)
+    dyn<-xyz_cor[,2]-filt
+    
+    
+    mags<-cbind(mags,sum(abs(dyn)))
+  }
+  
+  theta<-zrot[which(mags== max(mags))]
+
+  return(theta)
+}
+
+
+#Old Version
 ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=c(-pi/2,pi/2),weighting=FALSE){
   if(any(is.na(xyz))){
     stop("NAs in data")
@@ -96,6 +141,10 @@ ZrotAng<-function(xyz,dat_Freq=5, signal=c(.3,.7),wind=7, by=pi/360, head=0,lim=
 
   return(theta)
 }
+
+
+
+
 
 
 
