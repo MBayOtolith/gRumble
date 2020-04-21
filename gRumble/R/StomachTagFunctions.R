@@ -59,7 +59,7 @@ XYrotAng<-function(xyz){
   roll = atan2(pos[2],(pos[3]))
   pos<-pos %*% Xb(roll)
   
-  pitch = atan(pos[1],pos[3])
+  pitch = atan2(pos[1],pos[3])
   Xr=roll
   Yr=pitch
 
